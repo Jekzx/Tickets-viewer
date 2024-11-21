@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/11/13 10:47:24.000.107,=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>2024/11/13 11:05:39.000.588,=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>2024/11/13 11:06:24.000.663,=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit8.pas</Transaction>
+    <Transaction>2024/11/13 14:10:22.000.277,=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit8.pas</Transaction>
+    <Transaction>2024/11/13 14:59:41.000.312,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTickets.dproj=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2024/11/18 09:51:25.000.329,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTickets.dfm=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit7.dfm</Transaction>
+    <Transaction>2024/11/18 09:51:25.000.329,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTickets.pas=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>2024/11/18 09:51:50.000.230,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketsImagem.pas=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit8.pas</Transaction>
+    <Transaction>2024/11/18 09:51:50.000.230,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketsImagem.dfm=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\Unit8.dfm</Transaction>
+    <Transaction>2024/11/18 09:52:54.000.032,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketImagem.dfm=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketsImagem.dfm</Transaction>
+    <Transaction>2024/11/18 09:52:54.000.032,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketImagem.pas=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketsImagem.pas</Transaction>
+    <Transaction>2024/11/18 09:53:57.000.488,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visuImgFullscreen.pas=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketImagem.pas</Transaction>
+    <Transaction>2024/11/18 09:53:57.000.488,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visuImgFullscreen.dfm=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTicketImagem.dfm</Transaction>
+    <Transaction>2024/11/18 09:56:01.000.474,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\unit8.pas=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visuImgFullscreen.pas</Transaction>
+    <Transaction>2024/11/18 09:56:01.000.474,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\unit8.dfm=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visuImgFullscreen.dfm</Transaction>
+    <Transaction>2024/11/18 10:05:40.000.297,C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizarTickets.dproj=C:\Users\Kira\Documents\Embarcadero\Studio\Projects\visualizar_tickets\visualizarTickets.dproj</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="..\..\Projects"/>
+    <File Path="..\Unit7.pas"/>
+    <File Path="..\Unit7.dfm"/>
+    <File Path="..\Unit8.pas"/>
+    <File Path="..\Unit8.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>
