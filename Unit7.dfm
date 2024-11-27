@@ -204,6 +204,24 @@ object FormMain: TFormMain
     Caption = 'Todos'
     TabOrder = 7
   end
+  object MainMenu1: TMainMenu
+    Left = 24
+    Top = 40
+    object MenuConfig: TMenuItem
+      Caption = 'Configurações'
+      object MenuTheme: TMenuItem
+        Caption = 'Tema'
+        object MenuThemeDark: TMenuItem
+          Caption = 'Escuro'
+          OnClick = MenuThemeDarkClick
+        end
+        object MenuThemeLight: TMenuItem
+          Caption = 'Claro'
+          OnClick = MenuThemeLightClick
+        end
+      end
+    end
+  end
   object FDQueryTickets: TFDQuery
     Active = True
     Connection = FDConnection1

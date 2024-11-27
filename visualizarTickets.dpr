@@ -12,7 +12,6 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Tablet Dark');
   Application.CreateForm(TFormMain, FormMain);
   Application.CreateForm(TFormImageZoom, FormImageZoom);
   Application.Run;
