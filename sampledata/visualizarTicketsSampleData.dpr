@@ -2,15 +2,13 @@ program visualizarTicketsSampleData;
 
 uses
   Vcl.Forms,
-  Unit7 in 'Unit7.pas' {FormMain},
-  Unit8 in 'Unit8.pas' {FormImageZoom};
+  Unit7 in 'Unit7.pas' {FormTicketsViewer};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFormMain, FormMain);
-  Application.CreateForm(TFormImageZoom, FormImageZoom);
+  Application.CreateForm(TFormTicketsViewer, FormTicketsViewer);
   Application.Run;
 end.

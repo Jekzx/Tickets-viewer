@@ -3,193 +3,170 @@ unit Unit7;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Data.DB, Vcl.Grids, Vcl.DBGrids, FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
-  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite,
-  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait,
-  FireDAC.Comp.Client, FireDAC.Comp.DataSet, System.IOUtils;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
+  FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait, FireDAC.Stan.Param,
+  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, Vcl.StdCtrls,
+  Vcl.ExtCtrls, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids,
+  Vcl.DBGrids;
 
 type
-  TFormMain = class(TForm)
-    PanelTop: TPanel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label5: TLabel;
-    labelNotification: TLabel;
-    DBGridTickets: TDBGrid;
-    DBGridMessages: TDBGrid;
-    FDConnection1: TFDConnection;
+  TFormTicketsViewer = class(TForm)
+    FDConnectionTickets: TFDConnection;
     FDQueryTickets: TFDQuery;
-    FDQueryMessages: TFDQuery;
     DataSourceTickets: TDataSource;
+    FDQueryMessages: TFDQuery;
     DataSourceMessages: TDataSource;
-    PanelMain: TPanel;
-    PanelLeft: TPanel;
-    Splitter1: TSplitter;
-    PanelRight: TPanel;
+    PanelHeader: TPanel;
+    LabelHeader: TLabel;
+    SplitterMain: TSplitter;
     PanelTickets: TPanel;
+    PanelMessages: TPanel;
+    PanelTicketsList: TPanel;
+    LabelTickets: TLabel;
+    DBGridTickets: TDBGrid;
+    LabelMessages: TLabel;
+    DBGridMessages: TDBGrid;
+    SplitterTickets: TSplitter;
     PanelMessage: TPanel;
     PanelMessageHeader: TPanel;
+    LabelMessage: TLabel;
     MemoMessage: TMemo;
-    PanelMessagesHeader: TPanel;
-    LabelSender: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure DBGridTicketsCellClick(Column: TColumn);
     procedure DBGridMessagesCellClick(Column: TColumn);
   private
     procedure InitializeDatabase;
-    procedure CreateDatabaseTables;
+    procedure CreateTables;
     procedure PopulateSampleData;
-    procedure LoadTickets;
-    procedure LoadMessages(TicketID: Integer);
-    procedure DisplayMessage(const SenderName, MessageText: string);
+    procedure DisplayMessage(const Sender, MessageText: string; CreatedAt: TDateTime);
   public
     { Public declarations }
   end;
 
 var
-  FormMain: TFormMain;
+  FormTicketsViewer: TFormTicketsViewer;
 
 implementation
 
 {$R *.dfm}
 
-procedure TFormMain.FormCreate(Sender: TObject);
+uses
+  System.IOUtils;
+
+procedure TFormTicketsViewer.FormCreate(Sender: TObject);
 begin
-  try
-    InitializeDatabase;
-    CreateDatabaseTables;
-    PopulateSampleData;
-    LoadTickets;
-    MemoMessage.Text := 'Selecione um ticket e uma mensagem para visualizar.';
-    LabelSender.Caption := '';
-  except
-    on E: Exception do
-      ShowMessage('Error initializing: ' + E.Message);
-  end;
+  InitializeDatabase;
+  FDQueryTickets.Open;
+  MemoMessage.Lines.Add('Select a ticket to view messages...');
 end;
 
-procedure TFormMain.InitializeDatabase;
+procedure TFormTicketsViewer.InitializeDatabase;
 var
   DBPath: string;
 begin
-  // Get the path in the same directory as the executable
-  DBPath := ExtractFilePath(Application.ExeName) + 'tickets.db';
+  DBPath := TPath.Combine(TPath.GetDirectoryName(ParamStr(0)), 'tickets.db');
   
-  // Configure the connection
-  FDConnection1.Connected := False;
-  FDConnection1.Params.Clear;
-  FDConnection1.Params.Add('DriverID=SQLite');
-  FDConnection1.Params.Add('Database=' + DBPath);
-  FDConnection1.LoginPrompt := False;
+  FDConnectionTickets.Params.Clear;
+  FDConnectionTickets.Params.Add('Database=' + DBPath);
+  FDConnectionTickets.Params.Add('DriverID=SQLite');
   
   try
-    FDConnection1.Connected := True;
+    FDConnectionTickets.Connected := True;
+    CreateTables;
+    
+    // Check if we need to populate sample data
+    FDQueryTickets.Close;
+    FDQueryTickets.Open;
+    if FDQueryTickets.IsEmpty then
+      PopulateSampleData;
+    FDQueryTickets.Close;
   except
     on E: Exception do
-      raise Exception.Create('Database connection error: ' + E.Message);
+    begin
+      CreateTables;
+      PopulateSampleData;
+    end;
   end;
 end;
 
-procedure TFormMain.CreateDatabaseTables;
+procedure TFormTicketsViewer.CreateTables;
 begin
-  if not FDConnection1.Connected then Exit;
-  
-  FDConnection1.ExecSQL(
+  FDConnectionTickets.ExecSQL(
     'CREATE TABLE IF NOT EXISTS Tickets (' +
     'TicketID INTEGER PRIMARY KEY AUTOINCREMENT,' +
-    'Title VARCHAR(200) NOT NULL,' +
-    'Status VARCHAR(50) NOT NULL,' +
-    'Priority VARCHAR(50) NOT NULL,' +
-    'CreatedAt DATETIME NOT NULL,' +
-    'UpdatedAt DATETIME NOT NULL' +
-    ')');
+    'Title VARCHAR(200),' +
+    'Status VARCHAR(50),' +
+    'Priority VARCHAR(50),' +
+    'CreatedAt DATETIME,' +
+    'UpdatedAt DATETIME)');
 
-  FDConnection1.ExecSQL(
+  FDConnectionTickets.ExecSQL(
     'CREATE TABLE IF NOT EXISTS Messages (' +
     'MessageID INTEGER PRIMARY KEY AUTOINCREMENT,' +
-    'TicketID INTEGER NOT NULL,' +
-    'SenderName VARCHAR(100) NOT NULL,' +
-    'MessageText TEXT NOT NULL,' +
-    'CreatedAt DATETIME NOT NULL,' +
+    'TicketID INTEGER,' +
+    'SenderName VARCHAR(100),' +
+    'MessageText TEXT,' +
+    'CreatedAt DATETIME,' +
     'MediaPath VARCHAR(500),' +
-    'FOREIGN KEY(TicketID) REFERENCES Tickets(TicketID)' +
-    ')');
+    'FOREIGN KEY(TicketID) REFERENCES Tickets(TicketID))');
 end;
 
-procedure TFormMain.PopulateSampleData;
+procedure TFormTicketsViewer.PopulateSampleData;
 begin
-  if not FDConnection1.Connected then Exit;
-  
-  try
-    // Clear existing data
-    FDConnection1.ExecSQL('DELETE FROM Messages');
-    FDConnection1.ExecSQL('DELETE FROM Tickets');
+  // Sample Tickets
+  FDConnectionTickets.ExecSQL(
+    'INSERT INTO Tickets (Title, Status, Priority, CreatedAt, UpdatedAt) VALUES ' +
+    '("Problema com impressora", "Aberto", "Alta", "2023-11-15 09:00:00", "2023-11-15 09:00:00"),' +
+    '("Erro ao acessar sistema", "Em andamento", "Média", "2023-11-14 14:30:00", "2023-11-15 10:15:00"),' +
+    '("Solicitação de novo equipamento", "Fechado", "Baixa", "2023-11-13 11:20:00", "2023-11-15 16:45:00")');
 
-    // Insert sample tickets
-    FDConnection1.ExecSQL(
-      'INSERT INTO Tickets (Title, Status, Priority, CreatedAt, UpdatedAt) VALUES ' +
-      '("Problema com o Banco de Dados", "Em Andamento", "Alta", "2023-11-13 09:30:00", "2023-11-13 10:45:00"), ' +
-      '("Atualização de Software", "Aberto", "Média", "2023-11-12 14:20:00", "2023-11-13 09:15:00"), ' +
-      '("Erro de Configuração de Rede", "Fechado", "Baixa", "2023-11-10 08:45:00", "2023-11-12 16:30:00")');
+  // Sample Messages
+  FDConnectionTickets.ExecSQL(
+    'INSERT INTO Messages (TicketID, SenderName, MessageText, CreatedAt) VALUES ' +
+    '(1, "João Silva", "A impressora não está respondendo após atualização do Windows.", "2023-11-15 09:00:00"),' +
+    '(1, "Maria Suporte", "Por favor, tente reiniciar a impressora e o computador.", "2023-11-15 09:15:00"),' +
+    '(1, "João Silva", "Já tentei reiniciar ambos, mas o problema persiste.", "2023-11-15 09:30:00"),' +
+    '(2, "Ana Santos", "Não consigo fazer login no sistema desde hoje cedo.", "2023-11-14 14:30:00"),' +
+    '(2, "Pedro Suporte", "Vou verificar se há algum problema com o servidor.", "2023-11-14 15:00:00"),' +
+    '(3, "Carlos Lima", "Preciso de um novo monitor para minha estação de trabalho.", "2023-11-13 11:20:00"),' +
+    '(3, "Julia Suporte", "Pedido aprovado. Será entregue até amanhã.", "2023-11-13 14:00:00")');
+end;
 
-    // Insert sample messages
-    FDConnection1.ExecSQL(
-      'INSERT INTO Messages (TicketID, SenderName, MessageText, CreatedAt, MediaPath) VALUES ' +
-      '(1, "João Silva", "Detectamos inconsistências nos registros do banco de dados principal.", "2023-11-13 09:30:00", ""), ' +
-      '(1, "Suporte TI", "Investigando o problema de integridade dos dados. Possível corrupção de índice.", "2023-11-13 10:00:00", ""), ' +
-      '(2, "Maria Souza", "Necessidade de atualizar o sistema para a versão mais recente.", "2023-11-12 14:20:00", ""), ' +
-      '(2, "Administrador", "Preparando pacote de atualização e verificando compatibilidade.", "2023-11-13 09:15:00", ""), ' +
-      '(3, "Carlos Eduardo", "Configurações de rede não estão sincronizando corretamente.", "2023-11-10 08:45:00", ""), ' +
-      '(3, "Técnico de Rede", "Problema de configuração resolvido. Ajustes finais concluídos.", "2023-11-12 16:30:00", "")');
-  except
-    on E: Exception do
-      ShowMessage('Error populating data: ' + E.Message);
+procedure TFormTicketsViewer.DBGridTicketsCellClick(Column: TColumn);
+begin
+  if FDQueryTickets.FieldByName('TicketID').AsInteger > 0 then
+  begin
+    FDQueryMessages.Close;
+    FDQueryMessages.ParamByName('ID').AsInteger := FDQueryTickets.FieldByName('TicketID').AsInteger;
+    FDQueryMessages.Open;
+    
+    LabelMessage.Caption := 'Messages for Ticket #' + FDQueryTickets.FieldByName('TicketID').AsString;
+    MemoMessage.Clear;
+    MemoMessage.Lines.Add('Select a message to view details...');
   end;
 end;
 
-procedure TFormMain.LoadTickets;
-begin
-  FDQueryTickets.Close;
-  FDQueryTickets.SQL.Text := 'SELECT * FROM Tickets ORDER BY CreatedAt DESC';
-  FDQueryTickets.Open;
-end;
-
-procedure TFormMain.LoadMessages(TicketID: Integer);
-begin
-  FDQueryMessages.Close;
-  FDQueryMessages.SQL.Text := 'SELECT * FROM Messages WHERE TicketID = :ID ORDER BY CreatedAt';
-  FDQueryMessages.ParamByName('ID').AsInteger := TicketID;
-  FDQueryMessages.Open;
-  
-  MemoMessage.Text := 'Selecione uma mensagem para visualizar.';
-  LabelSender.Caption := '';
-end;
-
-procedure TFormMain.DisplayMessage(const SenderName, MessageText: string);
-var
-  FormattedDate: string;
-begin
-  LabelSender.Caption := Format('%s - %s', [SenderName, 
-    FormatDateTime('dd/mm/yyyy hh:nn', FDQueryMessages.FieldByName('CreatedAt').AsDateTime)]);
-  MemoMessage.Text := MessageText;
-end;
-
-procedure TFormMain.DBGridTicketsCellClick(Column: TColumn);
-begin
-  if not FDQueryTickets.IsEmpty then
-    LoadMessages(FDQueryTickets.FieldByName('TicketID').AsInteger);
-end;
-
-procedure TFormMain.DBGridMessagesCellClick(Column: TColumn);
+procedure TFormTicketsViewer.DBGridMessagesCellClick(Column: TColumn);
 begin
   if not FDQueryMessages.IsEmpty then
+  begin
     DisplayMessage(
       FDQueryMessages.FieldByName('SenderName').AsString,
-      FDQueryMessages.FieldByName('MessageText').AsString);
+      FDQueryMessages.FieldByName('MessageText').AsString,
+      FDQueryMessages.FieldByName('CreatedAt').AsDateTime
+    );
+  end;
+end;
+
+procedure TFormTicketsViewer.DisplayMessage(const Sender, MessageText: string; CreatedAt: TDateTime);
+begin
+  LabelMessage.Caption := Format('From: %s - %s', [Sender, FormatDateTime('dd/mm/yyyy hh:nn', CreatedAt)]);
+  MemoMessage.Lines.Clear;
+  MemoMessage.Lines.Add(MessageText);
 end;
 
 end.

@@ -1,315 +1,325 @@
-object FormMain: TFormMain
+object FormTicketsViewer: TFormTicketsViewer
   Left = 0
   Top = 0
-  Caption = 'Visualizar Ticket - Dados de Exemplo'
-  ClientHeight = 628
-  ClientWidth = 1134
-  Color = clBtnFace
+  Caption = 'Tickets Viewer'
+  ClientHeight = 661
+  ClientWidth = 984
+  Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -13
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 13
-  object PanelTop: TPanel
+  TextHeight = 17
+  object SplitterMain: TSplitter
+    Left = 633
+    Top = 41
+    Height = 620
+    Align = alRight
+    Color = 15921906
+    ParentColor = False
+    ExplicitLeft = 632
+    ExplicitTop = 0
+    ExplicitHeight = 661
+  end
+  object PanelHeader: TPanel
     Left = 0
     Top = 0
-    Width = 1134
+    Width = 984
     Height = 41
     Align = alTop
     BevelOuter = bvNone
-    Color = clWhite
+    Color = 4227327
     ParentBackground = False
     TabOrder = 0
-    object Label2: TLabel
+    object LabelHeader: TLabel
       Left = 16
-      Top = 12
-      Width = 106
-      Height = 15
-      Caption = 'Selecione seu ticket:'
+      Top = 8
+      Width = 137
+      Height = 25
+      Caption = 'TICKETS VIEWER'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -12
+      Font.Color = clWhite
+      Font.Height = -19
       Font.Name = 'Segoe UI'
-      Font.Style = []
+      Font.Style = [fsBold]
       ParentFont = False
     end
-    object labelNotification: TLabel
-      Left = 408
-      Top = 12
-      Width = 3
-      Height = 15
-    end
   end
-  object PanelMain: TPanel
+  object PanelTickets: TPanel
     Left = 0
     Top = 41
-    Width = 1134
-    Height = 587
+    Width = 633
+    Height = 620
     Align = alClient
     BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
     TabOrder = 1
-    object Splitter1: TSplitter
-      Left = 857
-      Top = 0
-      Height = 587
-      Align = alRight
-      ExplicitLeft = 632
-      ExplicitTop = 240
-      ExplicitHeight = 100
+    object SplitterTickets: TSplitter
+      Left = 0
+      Top = 321
+      Width = 633
+      Height = 3
+      Cursor = crVSplit
+      Align = alTop
+      Color = 15921906
+      ParentColor = False
+      ExplicitTop = 297
+      ExplicitWidth = 505
     end
-    object PanelLeft: TPanel
+    object PanelTicketsList: TPanel
       Left = 0
       Top = 0
-      Width = 857
-      Height = 587
-      Align = alClient
+      Width = 633
+      Height = 321
+      Align = alTop
       BevelOuter = bvNone
+      Color = clWhite
+      ParentBackground = False
       TabOrder = 0
-      object PanelTickets: TPanel
-        Left = 0
-        Top = 0
-        Width = 857
-        Height = 250
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 0
-        object DBGridTickets: TDBGrid
-          AlignWithMargins = True
-          Left = 8
-          Top = 8
-          Width = 841
-          Height = 234
-          Margins.Left = 8
-          Margins.Top = 8
-          Margins.Right = 8
-          Margins.Bottom = 8
-          Align = alClient
-          DataSource = DataSourceTickets
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-          TabOrder = 0
-          OnCellClick = DBGridTicketsCellClick
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -11
-          TitleFont.Name = 'Segoe UI'
-          TitleFont.Style = []
-          Columns = <
-            item
-              Expanded = False
-              FieldName = 'TicketID'
-              Title.Caption = 'ID'
-              Width = 40
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'Title'
-              Title.Caption = 'T'#237'tulo'
-              Width = 300
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'Status'
-              Width = 100
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'Priority'
-              Title.Caption = 'Prioridade'
-              Width = 80
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'CreatedAt'
-              Title.Caption = 'Criado em'
-              Width = 150
-              Visible = True
-            end>
-        end
+      object LabelTickets: TLabel
+        Left = 16
+        Top = 6
+        Width = 89
+        Height = 25
+        Caption = 'All Tickets'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 4227327
+        Font.Height = -19
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
-      object PanelMessage: TPanel
-        Left = 0
-        Top = 250
-        Width = 857
-        Height = 337
-        Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 1
-        object PanelMessageHeader: TPanel
-          Left = 0
-          Top = 0
-          Width = 857
-          Height = 41
-          Align = alTop
-          BevelOuter = bvNone
-          Color = clWhite
-          ParentBackground = False
-          TabOrder = 0
-          object Label5: TLabel
-            Left = 16
-            Top = 12
-            Width = 62
-            Height = 15
-            Caption = 'Mensagem:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clGray
-            Font.Height = -12
-            Font.Name = 'Segoe UI'
-            Font.Style = []
-            ParentFont = False
-          end
-          object LabelSender: TLabel
-            Left = 96
-            Top = 12
-            Width = 737
-            Height = 15
-            AutoSize = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clNavy
-            Font.Height = -12
-            Font.Name = 'Segoe UI'
-            Font.Style = [fsBold]
-            ParentFont = False
-          end
-        end
-        object MemoMessage: TMemo
-          AlignWithMargins = True
-          Left = 8
-          Top = 49
-          Width = 841
-          Height = 280
-          Margins.Left = 8
-          Margins.Top = 8
-          Margins.Right = 8
-          Margins.Bottom = 8
-          Align = alClient
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          ScrollBars = ssVertical
-          TabOrder = 1
-        end
-      end
-    end
-    object PanelRight: TPanel
-      Left = 860
-      Top = 0
-      Width = 274
-      Height = 587
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 1
-      object PanelMessagesHeader: TPanel
-        Left = 0
-        Top = 0
-        Width = 274
-        Height = 41
-        Align = alTop
-        BevelOuter = bvNone
-        Color = clWhite
-        ParentBackground = False
-        TabOrder = 0
-        object Label3: TLabel
-          Left = 16
-          Top = 12
-          Width = 124
-          Height = 15
-          Caption = 'Selecione a mensagem:'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clGray
-          Font.Height = -12
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-        end
-      end
-      object DBGridMessages: TDBGrid
+      object DBGridTickets: TDBGrid
         AlignWithMargins = True
-        Left = 8
-        Top = 49
-        Width = 258
-        Height = 530
-        Margins.Left = 8
-        Margins.Top = 8
-        Margins.Right = 8
-        Margins.Bottom = 8
+        Left = 16
+        Top = 37
+        Width = 601
+        Height = 268
+        Margins.Left = 16
+        Margins.Right = 16
+        Margins.Bottom = 16
         Align = alClient
-        DataSource = DataSourceMessages
+        BorderStyle = bsNone
+        Color = clWhite
+        DataSource = DataSourceTickets
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 2894892
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-        TabOrder = 1
-        OnCellClick = DBGridMessagesCellClick
+        ParentFont = False
+        TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
+        TitleFont.Color = 4227327
+        TitleFont.Height = -13
         TitleFont.Name = 'Segoe UI'
-        TitleFont.Style = []
+        TitleFont.Style = [fsBold]
+        OnCellClick = DBGridTicketsCellClick
         Columns = <
           item
             Expanded = False
-            FieldName = 'MessageID'
+            FieldName = 'TicketID'
             Title.Caption = 'ID'
             Width = 40
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'SenderName'
-            Title.Caption = 'Remetente'
+            FieldName = 'Title'
+            Title.Caption = 'Title'
+            Width = 250
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Status'
             Width = 100
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'CreatedAt'
-            Title.Caption = 'Data'
+            FieldName = 'Priority'
             Width = 80
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'CreatedAt'
+            Title.Caption = 'Created'
+            Width = 120
             Visible = True
           end>
       end
     end
+    object PanelMessage: TPanel
+      Left = 0
+      Top = 324
+      Width = 633
+      Height = 296
+      Align = alClient
+      BevelOuter = bvNone
+      Color = clWhite
+      ParentBackground = False
+      TabOrder = 1
+      object PanelMessageHeader: TPanel
+        Left = 0
+        Top = 0
+        Width = 633
+        Height = 41
+        Align = alTop
+        BevelOuter = bvNone
+        Color = 15921906
+        ParentBackground = False
+        TabOrder = 0
+        object LabelMessage: TLabel
+          Left = 16
+          Top = 8
+          Width = 137
+          Height = 25
+          Caption = 'Message Details'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -19
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+      end
+      object MemoMessage: TMemo
+        AlignWithMargins = True
+        Left = 16
+        Top = 57
+        Width = 601
+        Height = 223
+        Margins.Left = 16
+        Margins.Top = 16
+        Margins.Right = 16
+        Margins.Bottom = 16
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 2894892
+        Font.Height = -15
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 1
+      end
+    end
   end
-  object FDConnection1: TFDConnection
+  object PanelMessages: TPanel
+    Left = 636
+    Top = 41
+    Width = 348
+    Height = 620
+    Align = alRight
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    TabOrder = 2
+    object LabelMessages: TLabel
+      Left = 16
+      Top = 6
+      Width = 92
+      Height = 25
+      Caption = 'Messages'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 4227327
+      Font.Height = -19
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object DBGridMessages: TDBGrid
+      AlignWithMargins = True
+      Left = 16
+      Top = 37
+      Width = 316
+      Height = 567
+      Margins.Left = 16
+      Margins.Right = 16
+      Margins.Bottom = 16
+      Align = alClient
+      BorderStyle = bsNone
+      Color = clWhite
+      DataSource = DataSourceMessages
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 2894892
+      Font.Height = -13
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ParentFont = False
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = 4227327
+      TitleFont.Height = -13
+      TitleFont.Name = 'Segoe UI'
+      TitleFont.Style = [fsBold]
+      OnCellClick = DBGridMessagesCellClick
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'SenderName'
+          Title.Caption = 'From'
+          Width = 120
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CreatedAt'
+          Title.Caption = 'Date'
+          Width = 150
+          Visible = True
+        end>
+    end
+  end
+  object FDConnectionTickets: TFDConnection
+    Params.Strings = (
+      'Database=tickets.db'
+      'DriverID=SQLite')
     LoginPrompt = False
-    Left = 24
-    Top = 40
+    Left = 40
+    Top = 392
   end
   object FDQueryTickets: TFDQuery
-    Connection = FDConnection1
+    Connection = FDConnectionTickets
     SQL.Strings = (
       'SELECT * FROM Tickets')
-    Left = 96
-    Top = 40
-  end
-  object FDQueryMessages: TFDQuery
-    Connection = FDConnection1
-    SQL.Strings = (
-      'SELECT * FROM Messages')
-    Left = 96
-    Top = 88
+    Left = 40
+    Top = 448
   end
   object DataSourceTickets: TDataSource
     DataSet = FDQueryTickets
-    Left = 168
-    Top = 40
+    Left = 40
+    Top = 504
+  end
+  object FDQueryMessages: TFDQuery
+    Connection = FDConnectionTickets
+    SQL.Strings = (
+      'SELECT * FROM Messages WHERE TicketID = :ID')
+    Left = 120
+    Top = 448
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
   end
   object DataSourceMessages: TDataSource
     DataSet = FDQueryMessages
-    Left = 168
-    Top = 88
+    Left = 120
+    Top = 504
   end
 end
